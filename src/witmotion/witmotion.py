@@ -91,10 +91,10 @@ class Witmotion:
                                 data['speed'] = v/3600.0
                             elif msg[1] == 0x59:
                                 q = struct.unpack('<hhhh', msg[2:10])
-                                data['quaternion'] = (q[0] / 32768.0,
-                                                    q[1] / 32768.0,
+                                data['quaternion'] = (q[1] / 32768.0,
                                                     q[2] / 32768.0,
-                                                    q[3] / 32768.0)
+                                                    q[3] / 32768.0,
+                                                    q[0] / 32768.0)
                             elif msg[1] == 0x5a:
                                 sat_count,pdop,hdop,vdop = struct.unpack('<hhhh', msg[2:10])
                                 data['satellite_count'] = sat_count
@@ -125,7 +125,10 @@ if __name__ == '__main__':
                 for d in data:
                     # for i in d:
                     #     print(' ',i,d[i])
-                    print(d['timestamp'].isoformat())
+                    try:
+                        print(d['timestamp'].isoformat(),d['roll'],d['pitch'],d['yaw'])
+                    except KeyError:
+                        print(d['timestamp'].isoformat())
             else:
                 pass
                 #print('no data')
