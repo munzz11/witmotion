@@ -6,7 +6,7 @@ import struct
 import datetime
 
 class Witmotion:
-    def __init__(self, port='/dev/ttyUSB0', baud=9600):
+    def __init__(self, port='/dev/ttyUSB0', baud=115200):
         self.port = serial.Serial(port, baud, timeout=0.01)
         self.buffer = None
         self.pending_record = {}
@@ -29,12 +29,13 @@ class Witmotion:
                 data = self.pending_record
                 while len(self.buffer) >= 11:
 
-                    msg = self.buffer[:11]
+                    msg = self.buffer[:11]  
                     sum = 0
                     for i in range(10):
                         sum = (sum+msg[i])&0xff
                     if sum != msg[10]:
                         # invalid packet
+                        # print('invalid packet')
                         self.buffer = self.buffer[1:]
                     else:
                         self.buffer = self.buffer[11:]
@@ -103,9 +104,9 @@ class Witmotion:
                                 data['vdop'] = vdop/32768.0
                         except ValueError:
                             data = {}
-
+                ret.append(data)
+                data = {}
                 self.pending_record = data
-
                 if len(self.buffer) == 0:
                     self.buffer = None
                 if len(ret) > 0:
