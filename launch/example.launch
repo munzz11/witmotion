@@ -1,0 +1,16 @@
+<launch>
+	<arg name="namespace" default="example"/>
+	<arg name="wit_input" default="/dev/ttyUSB0"/>
+	<arg name="wit_input_speed" default="115200" />
+	
+	<group ns="$(arg namespace)">
+		<group ns="sensors">
+			<node pkg="witmotion" type="witmotion_node.py" name="witmotion">
+				<param name="frame_id" value="$(arg namespace)/motion_sensor"/>
+				<param name="port" value="$(arg wit_input)"/>
+				<param name="baud" value="$(arg wit_input_speed)"/>
+			</node>
+	
+		</group>
+	</group>
+</launch>
